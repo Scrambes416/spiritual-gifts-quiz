@@ -209,7 +209,7 @@ function pick(qi,v) {
   if (qblocks[localIdx]) {
     var btns = qblocks[localIdx].querySelectorAll('.opt');
     for (var i=0; i<btns.length; i++) {
-      if (i===v) btns[i].classList.add('sel');
+      if (i===v) { btns[i].classList.add('sel'); btns[i].blur(); }
       else btns[i].classList.remove('sel');
     }
   }
