@@ -5,304 +5,245 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catholic Spiritual Gifts Inventory</title>
 <style>
-  :root {
-    --gold: #b5893a; --gold-light: #d4a855; --cream: #fdf6ec;
-    --cream-mid: #f0e2c8; --light: #e8d5b0; --dark: #2c1f0e;
-    --mid: #7a5c38; --white: #ffffff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { min-height: 100vh; background: linear-gradient(160deg, var(--cream) 0%, var(--cream-mid) 100%); font-family: Georgia, 'Times New Roman', serif; color: var(--dark); padding: 24px 16px 48px; display: flex; justify-content: center; }
-  #sgi-wrap { max-width: 680px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
-  .card { background: var(--white); border-radius: 4px; box-shadow: 0 4px 32px rgba(44,31,14,0.12); padding: 32px 28px; width: 100%; border: 1px solid var(--light); }
-  .decor { text-align: center; font-size: 20px; color: var(--gold); margin-bottom: 8px; letter-spacing: 8px; }
-  h1 { font-size: clamp(20px,4vw,28px); color: var(--dark); text-align: center; margin-bottom: 12px; font-weight: normal; }
-  .subtitle { text-align: center; color: var(--mid); font-size: 15px; margin-bottom: 24px; font-style: italic; }
-  .divider { height: 1px; background: var(--light); margin: 16px 0; }
-  p { font-size: 15px; line-height: 1.7; margin-bottom: 16px; }
-  .scale-box { display: flex; gap: 8px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
-  .scale-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .scale-badge { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
-  .scale-text { font-size: 11px; color: var(--mid); text-transform: uppercase; letter-spacing: 0.05em; }
-  .privacy { background: var(--cream); border: 1px solid var(--light); border-radius: 3px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: var(--mid); }
-  .btn { background: var(--gold); color: #fff; border: none; border-radius: 3px; padding: 12px 28px; font-size: 15px; cursor: pointer; font-family: Georgia, serif; display: block; margin: 8px auto 0; }
-  .btn:hover { background: var(--gold-light); }
-  .btn-outline { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); border-radius: 3px; padding: 10px 24px; font-size: 14px; cursor: pointer; font-family: Georgia, serif; }
-  .btn-outline:hover { background: var(--cream); }
-  .btn:disabled, .btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Progress */
-  .progress-bar { height: 4px; background: var(--light); border-radius: 2px; margin-bottom: 12px; overflow: hidden; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 2px; transition: width 0.3s ease; }
-  .page-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-  .page-label { font-size: 12px; color: var(--mid); text-transform: uppercase; letter-spacing: 0.06em; }
-
-  /* Page jump nav */
-  .jump-nav { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
-  .jump-btn { font-size: 11px; padding: 4px 7px; border: 1px solid var(--light); border-radius: 3px; background: var(--white); cursor: pointer; color: var(--mid); font-family: Georgia, serif; white-space: nowrap; }
-  .jump-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .jump-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
-  .jump-btn.answered { border-color: var(--gold-light); color: var(--gold); }
-
-  /* Questions */
-  .q-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--light); }
-  .q-number { font-size: 11px; color: var(--gold); font-weight: bold; margin-bottom: 4px; letter-spacing: 0.05em; }
-  .q-text { color: var(--dark); font-size: 15px; line-height: 1.65; margin-bottom: 12px; }
-  .option-row { display: flex; gap: 6px; flex-wrap: wrap; }
-  .option { flex: 1 1 60px; min-width: 60px; padding: 8px 4px; border: 1.5px solid var(--light); border-radius: 3px; background: var(--white); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: all 0.15s; font-family: Georgia, serif; }
-  .option:hover { border-color: var(--gold); }
-  .option.selected { background: var(--gold); border-color: var(--gold); color: #fff; }
-  .option-score { font-size: 16px; font-weight: bold; }
-  .option-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
-
-  /* Results */
-  .section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); font-weight: bold; margin-bottom: 12px; display: block; }
-  .bar-row { margin-bottom: 12px; }
-  .bar-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-  .rank { width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: #fff; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
-  .charis-name { font-size: 15px; color: var(--dark); flex: 1; }
-  .score-num { font-size: 15px; font-weight: bold; color: var(--gold); }
-  .bar-track { height: 8px; background: var(--light); border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; background: var(--gold); border-radius: 4px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; margin-bottom: 16px; }
-  .grid-item { border: 1px solid var(--light); border-radius: 3px; padding: 8px 10px; }
-  .grid-name { font-size: 12px; color: var(--dark); font-weight: bold; display: block; margin-bottom: 2px; }
-  .grid-score { font-size: 20px; color: var(--gold); font-weight: bold; display: block; }
-  .mini-track { height: 4px; background: var(--light); border-radius: 2px; overflow: hidden; margin-top: 4px; }
-  .mini-fill { height: 100%; background: var(--gold); border-radius: 2px; }
-  .results-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
-
-  /* Donation footer */
-  #donate-footer { background: var(--white); border-radius: 4px; box-shadow: 0 4px 32px rgba(44,31,14,0.12); padding: 20px 24px; border: 1px solid var(--light); text-align: center; }
-  #donate-footer p { font-size: 14px; color: var(--mid); margin-bottom: 14px; }
-  #donate-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .donate-btn { background: var(--gold); color: #fff; border: none; border-radius: 3px; padding: 10px 20px; font-size: 14px; font-family: Georgia, serif; text-decoration: none; display: inline-block; }
-  .donate-btn:hover { background: var(--gold-light); }
-  .donate-btn-outline { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); }
-  .donate-btn-outline:hover { background: var(--cream-mid); }
-
-  @media print {
-    body { background: white; padding: 0; }
-    .card { box-shadow: none; border: none; }
-    .no-print { display: none !important; }
-    #donate-footer { display: none; }
-  }
+  :root { --gold:#b5893a; --gold-light:#d4a855; --cream:#fdf6ec; --cream-mid:#f0e2c8; --light:#e8d5b0; --dark:#2c1f0e; --mid:#7a5c38; --white:#ffffff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { min-height:100vh; background:linear-gradient(160deg,var(--cream) 0%,var(--cream-mid) 100%); font-family:Georgia,'Times New Roman',serif; color:var(--dark); padding:24px 16px 48px; display:flex; justify-content:center; }
+  #sgi-wrap { max-width:680px; width:100%; display:flex; flex-direction:column; gap:16px; }
+  .card { background:var(--white); border-radius:4px; box-shadow:0 4px 32px rgba(44,31,14,0.12); padding:32px 28px; border:1px solid var(--light); }
+  .decor { text-align:center; font-size:20px; color:var(--gold); margin-bottom:8px; letter-spacing:8px; }
+  h1 { font-size:clamp(20px,4vw,28px); color:var(--dark); text-align:center; margin-bottom:12px; font-weight:normal; }
+  .subtitle { text-align:center; color:var(--mid); font-size:15px; margin-bottom:24px; font-style:italic; }
+  .divider { height:1px; background:var(--light); margin:16px 0; }
+  p { font-size:15px; line-height:1.7; margin-bottom:16px; }
+  .scale-box { display:flex; gap:8px; justify-content:center; margin:16px 0; flex-wrap:wrap; }
+  .scale-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .scale-badge { width:40px; height:40px; border-radius:50%; background:var(--gold); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:18px; }
+  .scale-text { font-size:11px; color:var(--mid); text-transform:uppercase; letter-spacing:0.05em; }
+  .privacy { background:var(--cream); border:1px solid var(--light); border-radius:3px; padding:12px 16px; margin-bottom:20px; font-size:13px; color:var(--mid); }
+  .btn { background:var(--gold); color:#fff; border:none; border-radius:3px; padding:12px 28px; font-size:15px; cursor:pointer; font-family:Georgia,serif; display:block; margin:8px auto 0; }
+  .btn:hover { background:var(--gold-light); }
+  .btn-outline { background:transparent; color:var(--gold); border:1.5px solid var(--gold); border-radius:3px; padding:10px 24px; font-size:14px; cursor:pointer; font-family:Georgia,serif; }
+  .btn-outline:hover { background:var(--cream); }
+  .btn:disabled,.btn-outline:disabled { opacity:0.4; cursor:not-allowed; }
+  .progress-bar { height:4px; background:var(--light); border-radius:2px; margin-bottom:12px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:2px; transition:width 0.3s; }
+  .page-header { display:flex; justify-content:space-between; margin-bottom:12px; }
+  .page-label { font-size:12px; color:var(--mid); text-transform:uppercase; letter-spacing:0.06em; }
+  .jump-wrap { background:var(--cream); border:1px solid var(--gold-light); border-radius:4px; padding:12px 14px; margin-bottom:20px; }
+  .jump-label { font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:var(--mid); font-weight:bold; margin-bottom:8px; display:block; }
+  .jump-nav { display:flex; flex-wrap:wrap; gap:6px; }
+  .jbtn { font-size:12px; padding:6px 9px; border:1.5px solid var(--light); border-radius:3px; background:var(--white); cursor:pointer; color:var(--mid); font-family:Georgia,serif; }
+  .jbtn:hover { border-color:var(--gold); color:var(--gold); }
+  .jbtn.cur { background:var(--gold); border-color:var(--gold); color:#fff; font-weight:bold; }
+  .jbtn.done { border-color:var(--gold); color:var(--gold); background:var(--cream); }
+  .q-block { margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid var(--light); }
+  .q-num { font-size:11px; color:var(--gold); font-weight:bold; margin-bottom:4px; letter-spacing:0.05em; }
+  .q-text { color:var(--dark); font-size:15px; line-height:1.65; margin-bottom:12px; }
+  .opt-row { display:flex; gap:6px; flex-wrap:wrap; }
+  .opt { flex:1 1 60px; min-width:60px; padding:8px 4px; border:1.5px solid var(--light); border-radius:3px; background:var(--white); cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:2px; font-family:Georgia,serif; }
+  .opt:hover { border-color:var(--gold); }
+  .opt.sel { background:var(--gold); border-color:var(--gold); color:#fff; }
+  .opt-score { font-size:16px; font-weight:bold; }
+  .opt-label { font-size:10px; text-transform:uppercase; letter-spacing:0.04em; }
+  .nav-row { display:flex; justify-content:space-between; align-items:center; margin-top:16px; }
+  .sec-label { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--gold); font-weight:bold; margin-bottom:12px; display:block; }
+  .bar-row { margin-bottom:12px; }
+  .bar-lbl { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .rank { width:22px; height:22px; border-radius:50%; background:var(--gold); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:bold; flex-shrink:0; }
+  .c-name { font-size:15px; color:var(--dark); flex:1; }
+  .s-num { font-size:15px; font-weight:bold; color:var(--gold); }
+  .bar-track { height:8px; background:var(--light); border-radius:4px; overflow:hidden; }
+  .bar-fill { height:100%; background:var(--gold); border-radius:4px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:8px; margin-bottom:16px; }
+  .g-item { border:1px solid var(--light); border-radius:3px; padding:8px 10px; }
+  .g-name { font-size:12px; color:var(--dark); font-weight:bold; display:block; margin-bottom:2px; }
+  .g-score { font-size:20px; color:var(--gold); font-weight:bold; display:block; }
+  .mini-track { height:4px; background:var(--light); border-radius:2px; overflow:hidden; margin-top:4px; }
+  .mini-fill { height:100%; background:var(--gold); border-radius:2px; }
+  .res-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px; }
+  #donate-footer { background:var(--white); border-radius:4px; box-shadow:0 4px 32px rgba(44,31,14,0.12); padding:20px 24px; border:1px solid var(--light); text-align:center; }
+  #donate-footer p { font-size:14px; color:var(--mid); margin-bottom:14px; }
+  .d-btns { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .d-btn { background:var(--gold); color:#fff; border:none; border-radius:3px; padding:10px 20px; font-size:14px; font-family:Georgia,serif; text-decoration:none; display:inline-block; }
+  .d-btn:hover { background:var(--gold-light); }
+  .d-btn-out { background:transparent; color:var(--gold); border:1.5px solid var(--gold); }
+  @media print { body { background:white; padding:0; } .card { box-shadow:none; border:none; } .no-print { display:none !important; } #donate-footer { display:none; } }
 </style>
 </head>
 <body>
 <div id="sgi-wrap">
-  <div class="card" id="app"><!-- loads here --></div>
+  <div class="card" id="app"></div>
   <div id="donate-footer">
-    <p>This inventory was developed by the <strong>Catherine of Siena Institute</strong>.<br>
-    If it has been meaningful to you, please consider supporting their work or our parish.</p>
-    <div id="donate-btns">
-      <a href="https://siena.org/donate-now" target="_blank" rel="noopener" class="donate-btn">Give to Catherine of Siena Institute</a>
-      <a href="https://stmarysballstonspa.org/donate" target="_blank" rel="noopener" class="donate-btn donate-btn-outline">Give to St. Mary's, Ballston Spa</a>
+    <p>This inventory was developed by the <strong>Catherine of Siena Institute</strong>.<br>If it has been meaningful to you, please consider supporting their work or our parish.</p>
+    <div class="d-btns">
+      <a href="https://siena.org/donate-now" target="_blank" rel="noopener" class="d-btn">Give to Catherine of Siena Institute</a>
+      <a href="https://stmarysballstonspa.org/donate" target="_blank" rel="noopener" class="d-btn d-btn-out">Give to St. Mary's, Ballston Spa</a>
     </div>
   </div>
 </div>
-
 <script>
-const questions = ["When I find myself in a disorganized situation, I help things become better organized.", "Others have told me that I seem unusually fulfilled and content as a single person.", "One of the most satisfying ways to express my Christian faith is to create physical objects that are useful or beautiful.", "I have accurately \"recognized\" whether a person's words or actions were divine, demonic or merely human origin.", "People tell me that I am a remarkably effective listener or counselor who is able to comfort and heal others by talking with them.", "Talking about Catholicism with those who have little knowledge of it is one of the most fulfilling and important things I can do.", "I have trusted God to bring the seemingly impossible to pass and have seen God provide in a remarkable way.", "It gives me great joy to give as much as I possibly can to those in need.", "I have seen God heal the sick in a remarkable way through my treatment, care and/or prayers.", "It is much more fun and effective for me to work in the background and help someone else succeed than to be \"upfront\" myself.", "I know that hospitality is an important part of living as a Christian and I do whatever I can to make guests and visitors feel welcome.", "Others have told me that my prayers for them have been answered in wonderful or even extraordinary ways.", "I read and study a great deal in order to understand the universe God has made.", "One of the most helpful and fulfilling things that I do as a Christian is to find ways in which people can work together to change things for the better.", "I am drawn to and work well with people who are ignored or rejected by society.", "People of a different race or culture have told me that they feel very comfortable with me and have been spiritually nourished by my presence and friendship.", "Singing or playing a musical instrument is one of my favorite ways to pray.", "I understand the importance of Christian community and do everything I can to make it possible for Christians to spend time together during their experience of following Jesus.", "I know that it is vital that God's people respond to His call today with their whole hearts. I do whatever I can to make this clear to other Christians.", "One of the most important ways I express my faith as a Christian is by doing the practical work that it takes to make good things happen.", "People tell me that I have helped them learn new concepts or skills that made a real difference in their lives.", "I could live more comfortably but choose not to in order to live like the poor and identify with Jesus.", "I love the experiential wisdom of the Catholic tradition and enjoy solving practical problems by applying spiritual truths in creative ways.", "I love to use words creatively and have been told that I am an unusually gifted writer.", "Providing the planning and coordination that it takes to make good things happen is a very fulfilling way for me to live my faith and serve others.", "Being single is a positive state of life that enables me to serve God and others more freely.", "I am particularly good at solving problems related to the creation, repair, or maintenance of material objects.", "My own faith has been strengthened when I have \"sensed\" the Spirit of God resting on or dwelling in certain people, places or things.", "People talk to me when they are troubled or in need of direction, and have told me that they have been greatly comforted or helped as a result.", "Non-Christians or non-practicing Christians have told me that I have helped them develop a living faith in Christ and His Church.", "Other people have observed that I am unusually willing to take risks and to step out into the unknown because I have a deep trust in God's love and provision.", "I give money and things freely to others because God has given so much to me.", "I have prayed for and/or cared for others and unexpected healing has occurred as a result.", "Using my gifts to help another person accomplish something significant is a creative experience for me. I have been told that my assistance makes a big difference.", "People tell me that they have been encouraged and even healed because I have invited them to spend time in my home or with my family and/or friends.", "I have sensed a \"call\" to pray intensely for people or places that I didn't know well and have prayed for that situation until I felt that I was \"done.\"", "I love the rich intellectual heritage of Catholicism, which is an important source of nourishment for my intellectual and spiritual life.", "Others have told me that I am a person of unusual vision and direction, and have worked with me to make a vision happen.", "I identify with the pain of those who suffer or are oppressed and seek to comfort them with the love of Jesus through my actions.", "I move freely outside the culture of my childhood in order to share Christ with more people.", "I am musically gifted; my ability to write or perform music has delighted and nourished others, and given me much satisfaction.", "People have told me that they have been spiritually encouraged and strengthened by being part of a small Christian group that I facilitated.", "I have known what God wanted to say to certain people in particular situations, and have been told that others were encouraged or moved to action because I shared the message I had been given.", "I'd rather be active and do something practical for God or other people than just sit around talking.", "I enjoy spending time learning new things and then figuring out how to help others learn them as well.", "The poor readily accept me because I live simply.", "I make good practical use of information or ideas that I learn and have helped others do the same in their own lives.", "Writing is a good way to pray and is one of my favorite spiritual exercises.", "I have been told that my ability to organize has enabled others to better accomplish a complex task that served God and people.", "I readily identify with the celibate lifestyle of many of the saints.", "I enjoy making beautiful or useful things, especially when I know that it benefits others and gives glory to God.", "I have sensed that a person, place or thing was affected by an evil spirit and have had this sense confirmed by later events or other evidence.", "Individuals who talk to me about their lives will see that they grow personally and spiritually as a result of our time together.", "I have shared how God's presence and love has blessed my life in a way that is meaningful or intriguing to non-Christians or non-practicing Christians.", "I am very confident that God answers prayer and will provide all that I need to serve others and fulfill my God-given mission in life.", "I give sacrificially when confronted with the urgent needs of other people, the Church, or groups that work for worthy causes.", "Others have told me that God has used me to heal them of serious physical or mental illness when the chances for recovery were small.", "Other people have told me that my personal assistance enabled them to achieve things that they could never have done by themselves.", "I gladly open my home and give food and shelter to others, even when I am not prepared to have guests.", "Praying for others is one of my favorite spiritual practices, and seeing God answer my prayers in such wonderful ways has greatly strengthened my faith.", "I enjoy discovering \"new\" ideas or truths for myself by reading or observing situations first hand.", "I know that providing the sense of direction and hope that enables a group of people to accomplish new things is one of the most effective ways in which I serve God and others.", "People who are struggling with suffering or injustice have told me that I have been a real source of practical help and comfort.", "I am frustrated when I have little opportunity to relate to or work among people of a different language or cultural background.", "Writing or performing music is a wonderful creative experience for me. Others have told me that they really enjoy my music.", "One of the best ways that I can serve God and others is by doing whatever it takes to enable a group of Catholics to come together and explore their faith.", "When I share truths from Scripture or Catholic teaching with others, I do it in a way that calls for a personal response and sparks worship, repentance, or action in individuals or groups.", "I am able to see unmet organizational needs, or \"holes\", that others miss; and enjoy doing what it takes to fill the \"hole\" and make a difference.", "People tell me that I am able to explain complicated matters in a way that is clear, easy to remember, and interesting.", "I am drawn to the spiritual challenge of living simply in a materialistic culture.", "Other people tell me that I am very perceptive, and talk their problem or decisions over with me in order to take advantage of my insights.", "I find writing to be a very satisfying and creative means of expressing my faith.", "I enjoy and am unusually good at coordinating the many \"pieces\" of a larger task or goal.", "I am glad that I am single because I am freer to serve God.", "Others have noticed that I am unusually competent and creative in dealing with my physical surroundings.", "Others acknowledge that I have accurately \"recognized\" the presence of God's Spirit or an evil spirit in a person, place, or thing in the absence of tangible evidence.", "One of the most satisfying ways to express my faith is by listening and talking to those who seek out my encouragement, nurture, or counsel.", "I enjoy sharing with non-Catholics the joy and peace that my Catholic faith has given me.", "When making important life decisions, I rely upon the guidance, love and providence of God to an unusual degree.", "I do without things myself in order to be able to give more to others.", "I know that many of the sick that I care and/or pray for will be healed in remarkable ways.", "Personally providing the practical assistance that enables someone else to achieve good things is one of the best ways that I can serve God and help people.", "Strangers and newcomers have told me that I have made them feel especially welcome and comfortable.", "God seems to use my prayers as a way through which His love can reach others. People are often helped in remarkable ways when I pray for them.", "Others have told me that the insights that I have gained from my study have helped them grow in their own intellectual and spiritual lives.", "I am able to communicate my ideas or vision for a better future in a way that motivates others to work to help make the vision happen.", "One of the most important ways I express my Catholic faith is through practical deeds of love and care for the poor, the sick, or those suffering from injustice.", "I have learned a new language well in order to be an effective agent of God's purposes among people of a different culture than my own.", "I often express my faith in and love for God through music.", "I enjoy and have been told that I am particularly good at guiding and encouraging the spiritual growth of a group of Christians.", "I identify with the ministry and experience of the Old Testament prophets or of prophetic saints because God seems to use me in the same way.", "Other people tell me that I really know what it takes to get a job done, and that my personal willingness to do whatever is necessary makes a big difference.", "I have explained aspects of the Catholic faith to others and have seen them \"get it\" and grow spiritually as a result.", "Others have told me that I have sacrificed a great deal materially in order to follow Jesus and be close to the poor.", "I have helped others make good decisions that reflected the purposes of God in the midst of uncertainty.", "People really enjoy my writing and have told me that their lives have been touched or enriched by reading things that I have written.", "An important way I express my faith is by providing the planning and coordination that enables good things to be accomplished.", "I am emotionally and spiritually fulfilled without the special intimacy of marriage.", "Working creatively with my hands is a form of prayer or contemplation for me.", "I have been able to help others because I could tell the difference between normal human behavior caused by emotional disturbance and that influenced by a demonic presence.", "Others have said that talking to me has really helped them grow spiritually and/or discern God's direction for their life.", "I have shared my faith with people who have no church background and have seen them desire to know more about the Catholic faith as a result.", "When I, or others close to me, are in need, I am excited by the opportunity to trust in God and see how wonderfully he will provide.", "I am so confident that God will meet my own financial needs that I am free to give sacrificially.", "I have been used by God to restore strength and health to someone who suffered from a serious emotional or physical illness.", "One of my favorite ways to live out my faith is to use my abilities to personally help someone else accomplish a task or lifework to which God has called him or her.", "I express my Catholic faith by welcoming guests or strangers to my home or community as I would welcome Jesus.", "I know from experience that praying is one of the most helpful and satisfying things that I can do for someone else.", "Study is an important spiritual exercise for me because, when I study anything, I know that I am contemplating an aspect of God's loving activity in the universe.", "I have successfully led a group through the process of turning a faith-based vision or goal into reality.", "I find it very satisfying to personally serve those who are sick, powerless, or rejected by society and have been told that my efforts make a real, practical difference in their lives.", "I enjoy worshipping and sharing my faith with Catholics of another ethnic or cultural background.", "Others have told me that music has given them a lot of pleasure and/or drawn them closer to God.", "I have helped a specific group of Christians grow spiritually by bringing people together on a regular basis to pray, study and/or share their faith.", "Others have told me that I have really helped them by sharing an encouraging or challenging word from God with them at a critical moment in their life.", "I am a jack-of-all-trades, willing to do whatever it takes to serve God and others and to make good things happen.", "One of my favorite ways to express my Catholic faith is by helping others learn truths, information, or skills that will help them grow spiritually and as human beings.", "I identify with the saints who embraced poverty for Christ's sake.", "I often come up with good, faith-based solutions to complex problems.", "One of the best ways I can express my human experience and/or Christian faith is through writing."];
-const charisms = ["Administration","Celibacy","Craftsmanship","Discernment of Spirits","Encouragement","Evangelism","Extraordinary Faith","Giving","Healing","Helps","Hospitality","Intercessory Prayer","Knowledge","Leadership","Mercy","Missionary","Music","Pastoring","Prophecy","Service","Teaching","Voluntary Poverty","Wisdom","Writing"];
-const LABELS = ["Never","Little","Some","Often"];
-const PER_PAGE = 10;
-const TOTAL_PAGES = 12;
-const PAGE_LABELS = ["Q1-10", "Q11-20", "Q21-30", "Q31-40", "Q41-50", "Q51-60", "Q61-70", "Q71-80", "Q81-90", "Q91-100", "Q101-110", "Q111-120"];
-let state = { page: -1, answers: {}, showResults: false };
+var PW = "OCIA040426";
+var PER = 10;
+var TOTAL = 12;
+var PLABELS = ["Q1-10","Q11-20","Q21-30","Q31-40","Q41-50","Q51-60","Q61-70","Q71-80","Q81-90","Q91-100","Q101-110","Q111-120"];
+var charisms = ["Administration","Celibacy","Craftsmanship","Discernment of Spirits","Encouragement","Evangelism","Extraordinary Faith","Giving","Healing","Helps","Hospitality","Intercessory Prayer","Knowledge","Leadership","Mercy","Missionary","Music","Pastoring","Prophecy","Service","Teaching","Voluntary Poverty","Wisdom","Writing"];
+var LABELS = ["Never","Little","Some","Often"];
+var questions = ["When I find myself in a disorganized situation, I help things become better organized.","Others have told me that I seem unusually fulfilled and content as a single person.","One of the most satisfying ways to express my Christian faith is to create physical objects that are useful or beautiful.","I have accurately \u201crecognized\u201d whether a person\u2019s words or actions were divine, demonic or merely human origin.","People tell me that I am a remarkably effective listener or counselor who is able to comfort and heal others by talking with them.","Talking about Catholicism with those who have little knowledge of it is one of the most fulfilling and important things I can do.","I have trusted God to bring the seemingly impossible to pass and have seen God provide in a remarkable way.","It gives me great joy to give as much as I possibly can to those in need.","I have seen God heal the sick in a remarkable way through my treatment, care and/or prayers.","It is much more fun and effective for me to work in the background and help someone else succeed than to be \u201cupfront\u201d myself.","I know that hospitality is an important part of living as a Christian and I do whatever I can to make guests and visitors feel welcome.","Others have told me that my prayers for them have been answered in wonderful or even extraordinary ways.","I read and study a great deal in order to understand the universe God has made.","One of the most helpful and fulfilling things that I do as a Christian is to find ways in which people can work together to change things for the better.","I am drawn to and work well with people who are ignored or rejected by society.","People of a different race or culture have told me that they feel very comfortable with me and have been spiritually nourished by my presence and friendship.","Singing or playing a musical instrument is one of my favorite ways to pray.","I understand the importance of Christian community and do everything I can to make it possible for Christians to spend time together during their experience of following Jesus.","I know that it is vital that God\u2019s people respond to His call today with their whole hearts. I do whatever I can to make this clear to other Christians.","One of the most important ways I express my faith as a Christian is by doing the practical work that it takes to make good things happen.","People tell me that I have helped them learn new concepts or skills that made a real difference in their lives.","I could live more comfortably but choose not to in order to live like the poor and identify with Jesus.","I love the experiential wisdom of the Catholic tradition and enjoy solving practical problems by applying spiritual truths in creative ways.","I love to use words creatively and have been told that I am an unusually gifted writer.","Providing the planning and coordination that it takes to make good things happen is a very fulfilling way for me to live my faith and serve others.","Being single is a positive state of life that enables me to serve God and others more freely.","I am particularly good at solving problems related to the creation, repair, or maintenance of material objects.","My own faith has been strengthened when I have \u201csensed\u201d the Spirit of God resting on or dwelling in certain people, places or things.","People talk to me when they are troubled or in need of direction, and have told me that they have been greatly comforted or helped as a result.","Non-Christians or non-practicing Christians have told me that I have helped them develop a living faith in Christ and His Church.","Other people have observed that I am unusually willing to take risks and to step out into the unknown because I have a deep trust in God\u2019s love and provision.","I give money and things freely to others because God has given so much to me.","I have prayed for and/or cared for others and unexpected healing has occurred as a result.","Using my gifts to help another person accomplish something significant is a creative experience for me. I have been told that my assistance makes a big difference.","People tell me that they have been encouraged and even healed because I have invited them to spend time in my home or with my family and/or friends.","I have sensed a \u201ccall\u201d to pray intensely for people or places that I didn\u2019t know well and have prayed for that situation until I felt that I was \u201cdone.\u201d","I love the rich intellectual heritage of Catholicism, which is an important source of nourishment for my intellectual and spiritual life.","Others have told me that I am a person of unusual vision and direction, and have worked with me to make a vision happen.","I identify with the pain of those who suffer or are oppressed and seek to comfort them with the love of Jesus through my actions.","I move freely outside the culture of my childhood in order to share Christ with more people.","I am musically gifted; my ability to write or perform music has delighted and nourished others, and given me much satisfaction.","People have told me that they have been spiritually encouraged and strengthened by being part of a small Christian group that I facilitated.","I have known what God wanted to say to certain people in particular situations, and have been told that others were encouraged or moved to action because I shared the message I had been given.","I\u2019d rather be active and do something practical for God or other people than just sit around talking.","I enjoy spending time learning new things and then figuring out how to help others learn them as well.","The poor readily accept me because I live simply.","I make good practical use of information or ideas that I learn and have helped others do the same in their own lives.","Writing is a good way to pray and is one of my favorite spiritual exercises.","I have been told that my ability to organize has enabled others to better accomplish a complex task that served God and people.","I readily identify with the celibate lifestyle of many of the saints.","I enjoy making beautiful or useful things, especially when I know that it benefits others and gives glory to God.","I have sensed that a person, place or thing was affected by an evil spirit and have had this sense confirmed by later events or other evidence.","Individuals who talk to me about their lives will see that they grow personally and spiritually as a result of our time together.","I have shared how God\u2019s presence and love has blessed my life in a way that is meaningful or intriguing to non-Christians or non-practicing Christians.","I am very confident that God answers prayer and will provide all that I need to serve others and fulfill my God-given mission in life.","I give sacrificially when confronted with the urgent needs of other people, the Church, or groups that work for worthy causes.","Others have told me that God has used me to heal them of serious physical or mental illness when the chances for recovery were small.","Other people have told me that my personal assistance enabled them to achieve things that they could never have done by themselves.","I gladly open my home and give food and shelter to others, even when I am not prepared to have guests.","Praying for others is one of my favorite spiritual practices, and seeing God answer my prayers in such wonderful ways has greatly strengthened my faith.","I enjoy discovering \u201cnew\u201d ideas or truths for myself by reading or observing situations first hand.","I know that providing the sense of direction and hope that enables a group of people to accomplish new things is one of the most effective ways in which I serve God and others.","People who are struggling with suffering or injustice have told me that I have been a real source of practical help and comfort.","I am frustrated when I have little opportunity to relate to or work among people of a different language or cultural background.","Writing or performing music is a wonderful creative experience for me. Others have told me that they really enjoy my music.","One of the best ways that I can serve God and others is by doing whatever it takes to enable a group of Catholics to come together and explore their faith.","When I share truths from Scripture or Catholic teaching with others, I do it in a way that calls for a personal response and sparks worship, repentance, or action in individuals or groups.","I am able to see unmet organizational needs, or \u201choles\u201d, that others miss; and enjoy doing what it takes to fill the \u201chole\u201d and make a difference.","People tell me that I am able to explain complicated matters in a way that is clear, easy to remember, and interesting.","I am drawn to the spiritual challenge of living simply in a materialistic culture.","Other people tell me that I am very perceptive, and talk their problem or decisions over with me in order to take advantage of my insights.","I find writing to be a very satisfying and creative means of expressing my faith.","I enjoy and am unusually good at coordinating the many \u201cpieces\u201d of a larger task or goal.","I am glad that I am single because I am freer to serve God.","Others have noticed that I am unusually competent and creative in dealing with my physical surroundings.","Others acknowledge that I have accurately \u201crecognized\u201d the presence of God\u2019s Spirit or an evil spirit in a person, place, or thing in the absence of tangible evidence.","One of the most satisfying ways to express my faith is by listening and talking to those who seek out my encouragement, nurture, or counsel.","I enjoy sharing with non-Catholics the joy and peace that my Catholic faith has given me.","When making important life decisions, I rely upon the guidance, love and providence of God to an unusual degree.","I do without things myself in order to be able to give more to others.","I know that many of the sick that I care and/or pray for will be healed in remarkable ways.","Personally providing the practical assistance that enables someone else to achieve good things is one of the best ways that I can serve God and help people.","Strangers and newcomers have told me that I have made them feel especially welcome and comfortable.","God seems to use my prayers as a way through which His love can reach others. People are often helped in remarkable ways when I pray for them.","Others have told me that the insights that I have gained from my study have helped them grow in their own intellectual and spiritual lives.","I am able to communicate my ideas or vision for a better future in a way that motivates others to work to help make the vision happen.","One of the most important ways I express my Catholic faith is through practical deeds of love and care for the poor, the sick, or those suffering from injustice.","I have learned a new language well in order to be an effective agent of God\u2019s purposes among people of a different culture than my own.","I often express my faith in and love for God through music.","I enjoy and have been told that I am particularly good at guiding and encouraging the spiritual growth of a group of Christians.","I identify with the ministry and experience of the Old Testament prophets or of prophetic saints because God seems to use me in the same way.","Other people tell me that I really know what it takes to get a job done, and that my personal willingness to do whatever is necessary makes a big difference.","I have explained aspects of the Catholic faith to others and have seen them \u201cget it\u201d and grow spiritually as a result.","Others have told me that I have sacrificed a great deal materially in order to follow Jesus and be close to the poor.","I have helped others make good decisions that reflected the purposes of God in the midst of uncertainty.","People really enjoy my writing and have told me that their lives have been touched or enriched by reading things that I have written.","An important way I express my faith is by providing the planning and coordination that enables good things to be accomplished.","I am emotionally and spiritually fulfilled without the special intimacy of marriage.","Working creatively with my hands is a form of prayer or contemplation for me.","I have been able to help others because I could tell the difference between normal human behavior caused by emotional disturbance and that influenced by a demonic presence.","Others have said that talking to me has really helped them grow spiritually and/or discern God\u2019s direction for their life.","I have shared my faith with people who have no church background and have seen them desire to know more about the Catholic faith as a result.","When I, or others close to me, are in need, I am excited by the opportunity to trust in God and see how wonderfully he will provide.","I am so confident that God will meet my own financial needs that I am free to give sacrificially.","I have been used by God to restore strength and health to someone who suffered from a serious emotional or physical illness.","One of my favorite ways to live out my faith is to use my abilities to personally help someone else accomplish a task or lifework to which God has called him or her.","I express my Catholic faith by welcoming guests or strangers to my home or community as I would welcome Jesus.","I know from experience that praying is one of the most helpful and satisfying things that I can do for someone else.","Study is an important spiritual exercise for me because, when I study anything, I know that I am contemplating an aspect of God\u2019s loving activity in the universe.","I have successfully led a group through the process of turning a faith-based vision or goal into reality.","I find it very satisfying to personally serve those who are sick, powerless, or rejected by society and have been told that my efforts make a real, practical difference in their lives.","I enjoy worshipping and sharing my faith with Catholics of another ethnic or cultural background.","Others have told me that music has given them a lot of pleasure and/or drawn them closer to God.","I have helped a specific group of Christians grow spiritually by bringing people together on a regular basis to pray, study and/or share their faith.","Others have told me that I have really helped them by sharing an encouraging or challenging word from God with them at a critical moment in their life.","I am a jack-of-all-trades, willing to do whatever it takes to serve God and others and to make good things happen.","One of my favorite ways to express my Catholic faith is by helping others learn truths, information, or skills that will help them grow spiritually and as human beings.","I identify with the saints who embraced poverty for Christ\u2019s sake.","I often come up with good, faith-based solutions to complex problems.","One of the best ways I can express my human experience and/or Christian faith is through writing."];
 
-// Password gate
-(function() {
-  if (sessionStorage.getItem("sgi_auth") !== "OCIA040426") {
-    document.getElementById("app").innerHTML = `
-      <div class="decor">&#10022;</div>
-      <h1>Catholic Spiritual Gifts Inventory</h1>
-      <p class="subtitle">Please enter the password to continue.</p>
-      <div style="max-width:300px;margin:24px auto;">
-        <input id="pw-input" type="password" placeholder="Password"
-          style="width:100%;padding:12px 14px;border:1.5px solid #e8d5b0;border-radius:3px;font-size:16px;font-family:Georgia,serif;outline:none;margin-bottom:12px;display:block;"
-          onkeydown="if(event.key==='Enter')checkPw()"
-        />
-        <button class="btn" style="width:100%;margin:0;" onclick="checkPw()">Enter &#8594;</button>
-        <p id="pw-error" style="color:#c0392b;font-size:13px;text-align:center;margin-top:10px;min-height:18px;"></p>
-      </div>`;
-    setTimeout(() => { const el = document.getElementById("pw-input"); if(el) el.focus(); }, 50);
-    return;
-  }
-  render();
-})();
+var state = {page:-1, answers:{}, showResults:false};
 
-function checkPw() {
-  const val = document.getElementById("pw-input").value;
-  if (val === "OCIA040426") {
-    sessionStorage.setItem("sgi_auth", "OCIA040426");
-    render();
-  } else {
-    document.getElementById("pw-error").textContent = "Incorrect password. Please try again.";
-    document.getElementById("pw-input").value = "";
-    document.getElementById("pw-input").focus();
-  }
-}
-
-function pageIsComplete(p) {
-  const start = p * PER_PAGE;
-  for (let i = start; i < start + PER_PAGE; i++) {
-    if (state.answers[i] === undefined) return false;
-  }
+function pageComplete(p) {
+  var s = p*PER;
+  for (var i=s; i<s+PER; i++) { if (state.answers[i]===undefined) return false; }
   return true;
 }
-
-function getProgress() { return Math.round((Object.keys(state.answers).length / 120) * 100); }
-
-function computeScores() {
-  return charisms.map((_, i) => {
-    const qs = [i, i+24, i+48, i+72, i+96];
-    return qs.reduce((sum, q) => sum + (state.answers[q] ?? 0), 0);
+function progress() { return Math.round((Object.keys(state.answers).length/120)*100); }
+function scores() {
+  return charisms.map(function(_,i) {
+    var qs=[i,i+24,i+48,i+72,i+96];
+    return qs.reduce(function(sum,q){ return sum+(state.answers[q]||0); },0);
   });
 }
+function ranked() {
+  var sc=scores();
+  return charisms.map(function(n,i){ return {name:n,score:sc[i]}; }).sort(function(a,b){ return b.score-a.score; });
+}
 
-function getRanked() {
-  const scores = computeScores();
-  return charisms.map((name, i) => ({ name, score: scores[i] })).sort((a, b) => b.score - a.score);
+function jumpHtml(cur) {
+  return PLABELS.map(function(lbl,i) {
+    var cls='jbtn'+(i===cur?' cur':(pageComplete(i)?' done':''));
+    return '<button class="'+cls+'" onclick="goTo('+i+')">'+lbl+'</button>';
+  }).join('');
 }
 
 function render() {
-  const app = document.getElementById("app");
-  if (state.showResults) app.innerHTML = renderResults();
-  else if (state.page === -1) app.innerHTML = renderWelcome();
-  else app.innerHTML = renderQuiz();
-  window.scrollTo(0, 0);
+  var app=document.getElementById('app');
+  if (state.showResults) { app.innerHTML=renderResults(); }
+  else if (state.page===-1) { app.innerHTML=renderWelcome(); }
+  else { app.innerHTML=renderQuiz(); }
 }
 
 function renderWelcome() {
-  return `
-    <div class="decor">&#10022;</div>
-    <h1>Catholic Spiritual Gifts Inventory</h1>
-    <p class="subtitle">Discerning the charisms God has given you</p>
-    <div class="privacy">&#128274; <strong>Privacy:</strong> This quiz runs entirely in your browser. No answers are stored, sent, or seen by anyone. When you close this page, all data is gone.</div>
-    <p>This inventory helps you identify the charisms &#8212; spiritual gifts given by the Holy Spirit &#8212; that God may be calling you to use in service of others.</p>
-    <div class="divider"></div>
-    <p><strong>Instructions:</strong> For each of the 120 statements, indicate how true it is of your life to the present:</p>
-    <div class="scale-box">
-      <div class="scale-item"><div class="scale-badge">0</div><span class="scale-text">Never</span></div>
-      <div class="scale-item"><div class="scale-badge">1</div><span class="scale-text">Little</span></div>
-      <div class="scale-item"><div class="scale-badge">2</div><span class="scale-text">Some</span></div>
-      <div class="scale-item"><div class="scale-badge">3</div><span class="scale-text">Often</span></div>
-    </div>
-    <p style="text-align:center;color:var(--mid);font-size:13px;font-style:italic;margin:8px 0 0;">Answer based on your actual experience. There are no right or wrong answers.</p>
-    <button class="btn" onclick="startQuiz()">Begin &#8594;</button>`;
+  return '<div class="decor">&#10022;</div>'+
+    '<h1>Catholic Spiritual Gifts Inventory</h1>'+
+    '<p class="subtitle">Discerning the charisms God has given you</p>'+
+    '<div class="privacy">&#128274; <strong>Privacy:</strong> This quiz runs entirely in your browser. No answers are stored, sent, or seen by anyone.</div>'+
+    '<p>This inventory helps you identify the charisms &#8212; spiritual gifts given by the Holy Spirit &#8212; that God may be calling you to use in service of others.</p>'+
+    '<div class="divider"></div>'+
+    '<p><strong>Instructions:</strong> For each of the 120 statements, indicate how true it is of your life to the present:</p>'+
+    '<div class="scale-box">'+
+      '<div class="scale-item"><div class="scale-badge">0</div><span class="scale-text">Never</span></div>'+
+      '<div class="scale-item"><div class="scale-badge">1</div><span class="scale-text">Little</span></div>'+
+      '<div class="scale-item"><div class="scale-badge">2</div><span class="scale-text">Some</span></div>'+
+      '<div class="scale-item"><div class="scale-badge">3</div><span class="scale-text">Often</span></div>'+
+    '</div>'+
+    '<p style="text-align:center;color:var(--mid);font-size:13px;font-style:italic;margin:8px 0 0;">Answer based on your actual experience. There are no right or wrong answers.</p>'+
+    '<button class="btn" onclick="startQuiz()">Begin &#8594;</button>';
 }
 
 function renderQuiz() {
-  const startIdx = state.page * PER_PAGE;
-  const pageQs = questions.slice(startIdx, startIdx + PER_PAGE);
-  const pageAnswered = pageQs.every((_, i) => state.answers[startIdx + i] !== undefined);
-  const progress = getProgress();
-  const isLast = state.page === TOTAL_PAGES - 1;
-  const allAnswered = Object.keys(state.answers).length === 120;
+  var si=state.page*PER;
+  var pqs=questions.slice(si,si+PER);
+  var done=pqs.every(function(_,i){ return state.answers[si+i]!==undefined; });
+  var all=Object.keys(state.answers).length===120;
+  var isLast=state.page===TOTAL-1;
+  var pct=progress();
 
-  // Jump nav
-  const jumpBtns = PAGE_LABELS.map((lbl, i) => {
-    const isActive = i === state.page;
-    const isDone = pageIsComplete(i);
-    const cls = isActive ? 'jump-btn active' : (isDone ? 'jump-btn answered' : 'jump-btn');
-    return `<button class="${cls}" onclick="goToPage(${i})">${lbl}</button>`;
+  var qhtml=pqs.map(function(q,i) {
+    var qi=si+i; var v=state.answers[qi];
+    var opts=LABELS.map(function(lbl,s) {
+      return '<button class="opt'+(v===s?' sel':'')+'" onclick="pick('+qi+','+s+')">'+
+        '<span class="opt-score">'+s+'</span><span class="opt-label">'+lbl+'</span></button>';
+    }).join('');
+    return '<div class="q-block"><p class="q-num">QUESTION '+(qi+1)+'</p><p class="q-text">'+q+'</p><div class="opt-row">'+opts+'</div></div>';
   }).join('');
 
-  const qHtml = pageQs.map((q, i) => {
-    const qIdx = startIdx + i;
-    const val = state.answers[qIdx];
-    const opts = LABELS.map((label, score) =>
-      `<button class="option ${val === score ? 'selected' : ''}" onclick="answer(${qIdx},${score})">
-        <span class="option-score">${score}</span>
-        <span class="option-label">${label}</span>
-      </button>`).join('');
-    return `<div class="q-block">
-      <p class="q-number">QUESTION ${qIdx+1}</p>
-      <p class="q-text">${q}</p>
-      <div class="option-row">${opts}</div>
-    </div>`;
-  }).join('');
+  var nextBtn=isLast
+    ? '<button class="btn"'+(all?'':' disabled')+' onclick="showResults()">See Results &#8594;</button>'
+    : '<button class="btn"'+(done?'':' disabled')+' onclick="nextPage()">Next &#8594;</button>';
 
-  const nextBtn = isLast
-    ? `<button class="btn" ${allAnswered?'':'disabled'} onclick="showResults()">See Results &#8594;</button>`
-    : `<button class="btn" ${pageAnswered?'':'disabled'} onclick="nextPage()">Next &#8594;</button>`;
-
-  return `
-    <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
-    <div class="page-header">
-      <span class="page-label">Questions ${startIdx+1}&#8211;${Math.min(startIdx+PER_PAGE,120)} of 120</span>
-      <span class="page-label">${progress}% complete</span>
-    </div>
-    <div class="jump-nav no-print">${jumpBtns}</div>
-    ${qHtml}
-    <div class="nav-row">
-      <button class="btn-outline" ${state.page===0?'disabled':''} onclick="prevPage()">&#8592; Back</button>
-      ${nextBtn}
-    </div>`;
+  return '<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
+    '<div class="page-header"><span class="page-label">Questions '+(si+1)+'&#8211;'+Math.min(si+PER,120)+' of 120</span><span class="page-label">'+pct+'% complete</span></div>'+
+    '<div class="jump-wrap no-print"><span class="jump-label">Jump to any section</span><div class="jump-nav">'+jumpHtml(state.page)+'</div></div>'+
+    qhtml+
+    '<div class="nav-row"><button class="btn-outline"'+(state.page===0?' disabled':'')+' onclick="prevPage()">&#8592; Back</button>'+nextBtn+'</div>';
 }
 
 function renderResults() {
-  const ranked = getRanked();
-  const top5 = ranked.slice(0, 5);
-  const rest = ranked.slice(5);
-  const maxScore = 15;
-
-  const topBars = top5.map((item, i) => `
-    <div class="bar-row">
-      <div class="bar-label">
-        <div class="rank">${i+1}</div>
-        <span class="charis-name">${item.name}</span>
-        <span class="score-num">${item.score}</span>
-      </div>
-      <div class="bar-track"><div class="bar-fill" style="width:${(item.score/maxScore)*100}%;opacity:${1-i*0.08}"></div></div>
-    </div>`).join('');
-
-  const restGrid = rest.map(item => `
-    <div class="grid-item">
-      <span class="grid-name">${item.name}</span>
-      <span class="grid-score">${item.score}</span>
-      <div class="mini-track"><div class="mini-fill" style="width:${(item.score/maxScore)*100}%"></div></div>
-    </div>`).join('');
-
-  return `
-    <div class="decor">&#10022;</div>
-    <h1>Your Charism Profile</h1>
-    <p class="subtitle">Ranked by score (max 15 each).</p>
-    <span class="section-label">Top 5 Gifts</span>
-    ${topBars}
-    <div class="divider"></div>
-    <span class="section-label">Remaining Charisms</span>
-    <div class="grid">${restGrid}</div>
-    <div class="results-btns no-print">
-      <button class="btn-outline" onclick="copyResults()">&#128203; Copy Results</button>
-      <button class="btn-outline" onclick="window.print()">&#128424; Print / Save PDF</button>
-      <button class="btn" onclick="startOver()">Start Over</button>
-    </div>
-    <p id="copy-confirm" style="text-align:center;color:#b5893a;font-size:13px;margin-top:8px;min-height:18px;"></p>`;
+  var r=ranked(); var top=r.slice(0,5); var rest=r.slice(5); var mx=15;
+  var bars=top.map(function(item,i) {
+    return '<div class="bar-row"><div class="bar-lbl"><div class="rank">'+(i+1)+'</div><span class="c-name">'+item.name+'</span><span class="s-num">'+item.score+'</span></div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+Math.round((item.score/mx)*100)+'%;opacity:'+(1-i*0.08)+'"></div></div></div>';
+  }).join('');
+  var grid=rest.map(function(item) {
+    return '<div class="g-item"><span class="g-name">'+item.name+'</span><span class="g-score">'+item.score+'</span>'+
+      '<div class="mini-track"><div class="mini-fill" style="width:'+Math.round((item.score/mx)*100)+'%"></div></div></div>';
+  }).join('');
+  return '<div class="decor">&#10022;</div>'+
+    '<h1>Your Charism Profile</h1>'+
+    '<p class="subtitle">Ranked by score (max 15 each).</p>'+
+    '<span class="sec-label">Top 5 Gifts</span>'+bars+
+    '<div class="divider"></div>'+
+    '<span class="sec-label">Remaining Charisms</span>'+
+    '<div class="grid">'+grid+'</div>'+
+    '<div class="res-btns no-print">'+
+      '<button class="btn-outline" onclick="copyRes()">&#128203; Copy Results</button>'+
+      '<button class="btn-outline" onclick="window.print()">&#128424; Print / Save PDF</button>'+
+      '<button class="btn" onclick="startOver()">Start Over</button>'+
+    '</div>'+
+    '<p id="cc" style="text-align:center;color:#b5893a;font-size:13px;margin-top:8px;min-height:18px;"></p>'+
+    '<div class="divider" style="margin-top:16px;"></div>'+
+    '<div class="jump-wrap no-print"><span class="jump-label">Go back and edit answers</span><div class="jump-nav">'+jumpHtml(-1)+'</div></div>';
 }
 
-function startQuiz() { state.page = 0; render(); }
-function prevPage() { state.page = Math.max(0, state.page-1); render(); }
-function nextPage() { state.page++; render(); }
-function goToPage(p) { state.page = p; render(); }
-function answer(qIdx, val) { state.answers[qIdx] = val; render(); }
+function startQuiz() { state.page=0; render(); window.scrollTo(0,0); }
+function prevPage() { state.page=Math.max(0,state.page-1); render(); window.scrollTo(0,0); }
+function nextPage() { state.page++; render(); window.scrollTo(0,0); }
+function goTo(p) { state.page=p; state.showResults=false; render(); window.scrollTo(0,0); }
+function pick(qi,v) { state.answers[qi]=v; render(); }
 function showResults() {
-  if (Object.keys(state.answers).length < 120) { alert("Please answer all 120 questions first."); return; }
-  state.showResults = true; render();
+  if (Object.keys(state.answers).length<120) { alert("Please answer all 120 questions first."); return; }
+  state.showResults=true; render(); window.scrollTo(0,0);
 }
-function startOver() { state = { page: -1, answers: {}, showResults: false }; render(); }
-function copyResults() {
-  const ranked = getRanked();
-  const text = "Catholic Spiritual Gifts Inventory Results\n\n" +
-    "TOP 5 GIFTS\n" +
-    ranked.slice(0,5).map((item,i) => (i+1)+". "+item.name+": "+item.score+"/15").join("\n") +
-    "\n\nALL CHARISMS\n" +
-    ranked.map((item,i) => (i+1)+". "+item.name+": "+item.score+"/15").join("\n");
-  navigator.clipboard.writeText(text).then(() => {
-    document.getElementById("copy-confirm").textContent = "Copied to clipboard!";
-    setTimeout(() => { const el = document.getElementById("copy-confirm"); if(el) el.textContent=""; }, 3000);
-  }).catch(() => { prompt("Copy this text:", text); });
+function startOver() { state={page:-1,answers:{},showResults:false}; render(); window.scrollTo(0,0); }
+function copyRes() {
+  var r=ranked();
+  var txt="Catholic Spiritual Gifts Inventory Results\n\nTOP 5 GIFTS\n"+
+    r.slice(0,5).map(function(x,i){ return (i+1)+". "+x.name+": "+x.score+"/15"; }).join("\n")+
+    "\n\nALL CHARISMS\n"+
+    r.map(function(x,i){ return (i+1)+". "+x.name+": "+x.score+"/15"; }).join("\n");
+  navigator.clipboard.writeText(txt).then(function() {
+    var el=document.getElementById('cc'); if(el) el.textContent="Copied!";
+    setTimeout(function(){ var el=document.getElementById('cc'); if(el) el.textContent=""; },3000);
+  }).catch(function(){ prompt("Copy this text:",txt); });
+}
+
+// Password gate — runs on load
+(function() {
+  if (sessionStorage.getItem("sgi_auth")===PW) { render(); return; }
+  document.getElementById('app').innerHTML=
+    '<div class="decor">&#10022;</div>'+
+    '<h1>Catholic Spiritual Gifts Inventory</h1>'+
+    '<p class="subtitle">Please enter the password to continue.</p>'+
+    '<div style="max-width:300px;margin:24px auto;">'+
+      '<input id="pw" type="password" placeholder="Password" '+
+        'style="width:100%;padding:12px 14px;border:1.5px solid #e8d5b0;border-radius:3px;font-size:16px;font-family:Georgia,serif;margin-bottom:12px;display:block;outline:none;" '+
+        'onkeydown="if(event.key===\'Enter\')checkPw()"/>'+
+      '<button class="btn" style="width:100%;margin:0;" onclick="checkPw()">Enter &#8594;</button>'+
+      '<p id="pwe" style="color:#c0392b;font-size:13px;text-align:center;margin-top:10px;min-height:18px;"></p>'+
+    '</div>';
+  setTimeout(function(){ var el=document.getElementById('pw'); if(el) el.focus(); },50);
+})();
+
+function checkPw() {
+  var el=document.getElementById('pw');
+  if (!el) return;
+  if (el.value===PW) { sessionStorage.setItem("sgi_auth",PW); render(); }
+  else {
+    var err=document.getElementById('pwe');
+    if(err) err.textContent="Incorrect password. Please try again.";
+    el.value=""; el.focus();
+  }
 }
 </script>
 </body>
