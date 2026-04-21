@@ -200,7 +200,41 @@ function startQuiz() { state.page=0; render(); window.scrollTo(0,0); }
 function prevPage() { state.page=Math.max(0,state.page-1); render(); window.scrollTo(0,0); }
 function nextPage() { state.page++; render(); window.scrollTo(0,0); }
 function goTo(p) { state.page=p; state.showResults=false; render(); window.scrollTo(0,0); }
-function pick(qi,v) { state.answers[qi]=v; render(); }
+function pick(qi,v) {
+  state.answers[qi]=v;
+
+  // 1. Update just the option buttons for this question — no page re-render
+  var qblocks = document.querySelectorAll('.q-block');
+  var localIdx = qi - (state.page * PER);
+  if (qblocks[localIdx]) {
+    var btns = qblocks[localIdx].querySelectorAll('.opt');
+    for (var i=0; i<btns.length; i++) {
+      if (i===v) btns[i].classList.add('sel');
+      else btns[i].classList.remove('sel');
+    }
+  }
+
+  // 2. Update progress bar and label
+  var pct = progress();
+  var fill = document.querySelector('.progress-fill');
+  if (fill) fill.style.width = pct + '%';
+  var plabels = document.querySelectorAll('.page-label');
+  if (plabels[1]) plabels[1].textContent = pct + '% complete';
+
+  // 3. Enable/disable Next or See Results button
+  var si = state.page * PER;
+  var done = questions.slice(si, si+PER).every(function(_,i){ return state.answers[si+i]!==undefined; });
+  var all = Object.keys(state.answers).length===120;
+  var isLast = state.page===TOTAL-1;
+  var nextBtn = document.querySelector('.nav-row .btn');
+  if (nextBtn) nextBtn.disabled = isLast ? !all : !done;
+
+  // 4. Update jump nav button for current page if now complete
+  if (pageComplete(state.page)) {
+    var jbtns = document.querySelectorAll('.jbtn');
+    if (jbtns[state.page]) jbtns[state.page].className = 'jbtn cur';
+  }
+}
 function showResults() {
   if (Object.keys(state.answers).length<120) { alert("Please answer all 120 questions first."); return; }
   state.showResults=true; render(); window.scrollTo(0,0);
