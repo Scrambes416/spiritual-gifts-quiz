@@ -37,13 +37,11 @@
   .page-label { font-size: 12px; color: var(--mid); text-transform: uppercase; letter-spacing: 0.06em; }
 
   /* Page jump nav */
-  .jump-nav-wrap { background: var(--cream); border: 1px solid var(--gold-light); border-radius: 4px; padding: 12px 14px; margin-bottom: 20px; }
-  .jump-nav-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid); margin-bottom: 8px; display: block; font-weight: bold; }
-  .jump-nav { display: flex; flex-wrap: wrap; gap: 6px; }
-  .jump-btn { font-size: 12px; padding: 7px 10px; border: 1.5px solid var(--light); border-radius: 3px; background: var(--white); cursor: pointer; color: var(--mid); font-family: Georgia, serif; white-space: nowrap; }
-  .jump-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--cream); }
-  .jump-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; font-weight: bold; }
-  .jump-btn.answered { border-color: var(--gold); color: var(--gold); background: var(--cream); }
+  .jump-nav { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; }
+  .jump-btn { font-size: 11px; padding: 4px 7px; border: 1px solid var(--light); border-radius: 3px; background: var(--white); cursor: pointer; color: var(--mid); font-family: Georgia, serif; white-space: nowrap; }
+  .jump-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .jump-btn.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+  .jump-btn.answered { border-color: var(--gold-light); color: var(--gold); }
 
   /* Questions */
   .q-block { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--light); }
@@ -236,7 +234,7 @@ function renderQuiz() {
       <span class="page-label">Questions ${startIdx+1}&#8211;${Math.min(startIdx+PER_PAGE,120)} of 120</span>
       <span class="page-label">${progress}% complete</span>
     </div>
-    <div class="jump-nav-wrap no-print"><span class="jump-nav-label">&#9776; Jump to any section</span><div class="jump-nav">${jumpBtns}</div></div>
+    <div class="jump-nav no-print">${jumpBtns}</div>
     ${qHtml}
     <div class="nav-row">
       <button class="btn-outline" ${state.page===0?'disabled':''} onclick="prevPage()">&#8592; Back</button>
@@ -281,14 +279,7 @@ function renderResults() {
       <button class="btn-outline" onclick="window.print()">&#128424; Print / Save PDF</button>
       <button class="btn" onclick="startOver()">Start Over</button>
     </div>
-    <p id="copy-confirm" style="text-align:center;color:#b5893a;font-size:13px;margin-top:8px;min-height:18px;"></p>
-    <div class="divider" style="margin-top:20px;"></div>
-    <div class="jump-nav-wrap no-print">
-      <span class="jump-nav-label">&#9998; Go back and edit answers</span>
-      <div class="jump-nav">
-        ${{PAGE_LABELS.map((lbl,i) => '<button class="jump-btn ' + (pageIsComplete(i)?'answered':'') + '" onclick="goToPage('+i+')">'+lbl+'</button>').join('')}}
-      </div>
-    </div>\`;
+    <p id="copy-confirm" style="text-align:center;color:#b5893a;font-size:13px;margin-top:8px;min-height:18px;"></p>`;
 }
 
 function startQuiz() { state.page = 0; render(); }
